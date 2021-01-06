@@ -12,6 +12,17 @@ class CustomImage:
                                          folder,
                                          os.path.basename(self.path))
 
+    def reduce_image(self, size=0.5, quality=75):
+        new_width = round(self.width * size)
+        new_height = round(self.height * size)
+        self.image = self.image.resize((new_width,new_height), Image.ANTIALIAS)
+        parent_dir = os.path.dirname(self.reduced_path)
+        if not os.path.exists(parent_dir):
+            os.makedirs(parent_dir)
+
+        self.image.save(self.reduced_path, 'JPEG', quality=quality)
+        return os.path.exists(self.reduced_path)
 
 if __name__ == "__main__":
     i = CustomImage("D:\_PythonProjets\SourceQtForPython\_sample_images\dog.jpg")
+    i.reduce_image(size=1,quality=50)
