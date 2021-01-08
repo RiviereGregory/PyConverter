@@ -1,8 +1,9 @@
 from PySide2 import QtWidgets
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("PyConverter")
         self.setup_ui()
 
 
@@ -14,7 +15,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setup_connections()
 
     def create_widgets(self):
-        pass
+        self.lbl_quality = QtWidgets.QLabel("Qualité:")
+        self.spn_quality = QtWidgets.QSpinBox()
+        self.lbl_size = QtWidgets.QLabel("Taille:")
+        self.spn_size = QtWidgets.QSpinBox()
+        self.lbl_dossierOut = QtWidgets.QLabel("Dossier de sortie:")
+        self.le_dossierOut = QtWidgets.QLineEdit()
+        self.lw_files = QtWidgets.QListWidget()
+        self.btn_convert = QtWidgets.QPushButton("Conversion")
+        self.lbl_dropInfo = QtWidgets.QLabel("^ Déposez les images sur l'interface")
 
     def modify_widgets(self):
         pass
