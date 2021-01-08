@@ -1,11 +1,11 @@
 from PySide2 import QtWidgets
 
+
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("PyConverter")
         self.setup_ui()
-
 
     def setup_ui(self):
         self.create_widgets()
@@ -29,10 +29,18 @@ class MainWindow(QtWidgets.QWidget):
         pass
 
     def create_layouts(self):
-        pass
+        self.main_layout = QtWidgets.QGridLayout(self)
 
     def add_widgets_to_layouts(self):
-        pass
+        self.main_layout.addWidget(self.lbl_quality, 0, 0, 1, 1)
+        self.main_layout.addWidget(self.spn_quality, 0, 1, 1, 1)
+        self.main_layout.addWidget(self.lbl_size, 1, 0, 1, 1)
+        self.main_layout.addWidget(self.spn_size, 1, 1, 1, 1)
+        self.main_layout.addWidget(self.lbl_dossierOut, 2, 0, 1, 1)
+        self.main_layout.addWidget(self.le_dossierOut, 2, 1, 1, 1)
+        self.main_layout.addWidget(self.lw_files, 3, 0, 1, 2)
+        self.main_layout.addWidget(self.lbl_dropInfo, 4, 0, 1, 2)
+        self.main_layout.addWidget(self.btn_convert, 5, 0, 1, 2)
 
     def setup_connections(self):
         pass
