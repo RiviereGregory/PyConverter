@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets, QtCore
+from PySide2 import QtWidgets, QtCore, QtGui
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -44,6 +44,8 @@ class MainWindow(QtWidgets.QWidget):
         self.le_dossierOut.setPlaceholderText("Dossier de sortie...")
         self.le_dossierOut.setText("reduced")
         self.lbl_dropInfo.setVisible(False)
+        # Drag and Drop
+        self.setAcceptDrops(True)
 
     def create_layouts(self):
         self.main_layout = QtWidgets.QGridLayout(self)
@@ -61,3 +63,17 @@ class MainWindow(QtWidgets.QWidget):
 
     def setup_connections(self):
         pass
+
+    def dragEnterEvent(self, event):
+        self.lbl_dropInfo.setVisible(True)
+        event.accept()
+
+    def dragLeaveEvent(self, event):
+        self.lbl_dropInfo.setVisible(False)
+
+    def dropEvent(self, event):
+        event.accept()
+        for url in event.mimeData().urls():
+            self.lw_files.addItem(url.toLocalFile())
+
+        self.lbl_dropInfo.setVisible(False)
