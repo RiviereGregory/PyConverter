@@ -74,6 +74,15 @@ class MainWindow(QtWidgets.QWidget):
     def dropEvent(self, event):
         event.accept()
         for url in event.mimeData().urls():
-            self.lw_files.addItem(url.toLocalFile())
+            self.add_file(path=url.toLocalFile())
 
         self.lbl_dropInfo.setVisible(False)
+
+    def add_file(self, path):
+        items = [self.lw_files.item(index).text() for index in range(self.lw_files.count())]
+        if path not in items:
+            lw_item = QtWidgets.QListWidgetItem(path)
+            lw_item.setIcon(self.ctx.img_unchecked)
+            lw_item.processed = False
+            self.lw_files.addItem(lw_item)
+
