@@ -62,7 +62,16 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(self.btn_convert, 5, 0, 1, 2)
 
     def setup_connections(self):
-        pass
+        QtWidgets.QShortcut(QtGui.QKeySequence("Backspace"), self.lw_files, self.delete_selected_items)
+        self.btn_convert.clicked.connect(self.convert_images)
+
+    def convert_images(self):
+        print("Conversion des images")
+
+    def delete_selected_items(self):
+        for lw_item in self.lw_files.selectedItems():
+            row = self.lw_files.row(lw_item)
+            self.lw_files.takeItem(row)
 
     def dragEnterEvent(self, event):
         self.lbl_dropInfo.setVisible(True)
@@ -85,4 +94,3 @@ class MainWindow(QtWidgets.QWidget):
             lw_item.setIcon(self.ctx.img_unchecked)
             lw_item.processed = False
             self.lw_files.addItem(lw_item)
-
