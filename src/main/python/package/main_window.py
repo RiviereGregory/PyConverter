@@ -1,9 +1,10 @@
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtCore
 
 
 class MainWindow(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, ctx):
         super().__init__()
+        self.ctx = ctx
         self.setWindowTitle("PyConverter")
         self.setup_ui()
 
@@ -26,7 +27,23 @@ class MainWindow(QtWidgets.QWidget):
         self.lbl_dropInfo = QtWidgets.QLabel("^ Déposez les images sur l'interface")
 
     def modify_widgets(self):
-        pass
+        css_file = self.ctx.get_resource("style.css")
+        with open(css_file, "r") as f:
+            self.setStyleSheet(f.read())
+
+        # Alignement
+        self.spn_quality.setAlignment(QtCore.Qt.AlignRight)
+        self.spn_size.setAlignment(QtCore.Qt.AlignRight)
+        self.le_dossierOut.setAlignment(QtCore.Qt.AlignRight)
+        # Range
+        self.spn_quality.setRange(1, 100)
+        self.spn_quality.setValue(75)
+        self.spn_size.setRange(1, 100)
+        self.spn_size.setValue(50)
+        # Divers
+        self.le_dossierOut.setPlaceholderText("Dossier de sortie...")
+        self.le_dossierOut.setText("reduced")
+        self.lbl_dropInfo.setVisible(False)
 
     def create_layouts(self):
         self.main_layout = QtWidgets.QGridLayout(self)
