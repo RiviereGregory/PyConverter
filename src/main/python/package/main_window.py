@@ -66,7 +66,18 @@ class MainWindow(QtWidgets.QWidget):
         self.btn_convert.clicked.connect(self.convert_images)
 
     def convert_images(self):
-        print("Conversion des images")
+        quality = self.spn_quality.value()
+        size = self.spn_size.value() / 100.0
+        folder = self.le_dossierOut.text()
+
+        lw_items = [self.lw_files.item(index) for index in range(self.lw_files.count())]
+        images_a_convertir = [1 for lw_item in lw_items if not lw_item.processed]
+        if not images_a_convertir:
+            msg_box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Warning,
+                                            "Aucune image à convertir",
+                                            "Toutes les images ont déjà été converties")
+            msg_box.exec_()
+            return False
 
     def delete_selected_items(self):
         for lw_item in self.lw_files.selectedItems():
