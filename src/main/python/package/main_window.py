@@ -4,6 +4,9 @@ from package.image import CustomImage
 
 
 class Worker(QtCore.QObject):
+    image_converted = QtCore.Signal(object, bool)
+    finished = QtCore.Signal()
+
     def __init__(self, images_to_convert, quality, size, folder):
         super().__init__()
         self.images_to_convert = images_to_convert
@@ -15,7 +18,10 @@ class Worker(QtCore.QObject):
         for image_lw_item in self.images_to_convert:
             if not image_lw_item.processed:
                 image = CustomImage(path=image_lw_item.text(), folder=self.folder)
-                image.reduce_image(size=self.size, quality=self.quality)
+                success = image.reduce_image(size=self.size, quality=self.quality)
+                self.image_converted.emit(image_lw_item, success)
+
+        self.finished.emit()
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -102,8 +108,15 @@ class MainWindow(QtWidgets.QWidget):
                              size=size,
                              folder=folder)
         self.worker.moveToThread(self.thread)
+        self.worker.image_converted.connect(self.image_converted)
         self.thread.started.connect(self.worker.convert_images)
+        self.worker.finished.connect(self.thread.quit)
         self.thread.start()
+
+    def image_converted(self, lw_item, success):
+        if success:
+            lw_item.setIcon(self.ctx.img_checked)
+            lw_item.processed = True
 
     def delete_selected_items(self):
         for lw_item in self.lw_files.selectedItems():
