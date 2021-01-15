@@ -70,6 +70,10 @@ class MainWindow(QtWidgets.QWidget):
         self.lbl_dropInfo.setVisible(False)
         # Drag and Drop
         self.setAcceptDrops(True)
+        # Changement de couleur des lignes
+        self.lw_files.setAlternatingRowColors(True)
+        # MultiSelection
+        self.lw_files.setSelectionMode(QtWidgets.QListWidget.ExtendedSelection)
 
     def create_layouts(self):
         self.main_layout = QtWidgets.QGridLayout(self)
