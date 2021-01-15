@@ -1,5 +1,22 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 
+from package.image import CustomImage
+
+
+class Worker(QtCore.QObject):
+    def __init__(self, images_to_convert, quality, size, folder):
+        super().__init__()
+        self.images_to_convert = images_to_convert
+        self.quality = quality
+        self.size = size
+        self.folder = folder
+
+    def convert_images(self):
+        for image_lw_item in self.images_to_convert:
+            if not image_lw_item.processed:
+                image = CustomImage(path=image_lw_item.text(), folder=self.folder)
+                image.reduce_image(size=self.size, quality=self.quality)
+
 
 class MainWindow(QtWidgets.QWidget):
     def __init__(self, ctx):
@@ -78,6 +95,15 @@ class MainWindow(QtWidgets.QWidget):
                                             "Toutes les images ont déjà été converties")
             msg_box.exec_()
             return False
+
+        self.thread = QtCore.QThread(self)
+        self.worker = Worker(images_to_convert=lw_items,
+                             quality=quality,
+                             size=size,
+                             folder=folder)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.convert_images)
+        self.thread.start()
 
     def delete_selected_items(self):
         for lw_item in self.lw_files.selectedItems():
