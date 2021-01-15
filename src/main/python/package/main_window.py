@@ -13,10 +13,11 @@ class Worker(QtCore.QObject):
         self.quality = quality
         self.size = size
         self.folder = folder
+        self.runs = True
 
     def convert_images(self):
         for image_lw_item in self.images_to_convert:
-            if not image_lw_item.processed:
+            if self.runs and not image_lw_item.processed:
                 image = CustomImage(path=image_lw_item.text(), folder=self.folder)
                 success = image.reduce_image(size=self.size, quality=self.quality)
                 self.image_converted.emit(image_lw_item, success)
@@ -117,7 +118,12 @@ class MainWindow(QtWidgets.QWidget):
                                                     "Annuler...",
                                                     1,
                                                     len(images_a_convertir))
+        self.prg_dialog.canceled.connect(self.abort)
         self.prg_dialog.show()
+
+    def abort(self):
+        self.worker.runs = False
+        self.thread.quit()
 
     def image_converted(self, lw_item, success):
         if success:
