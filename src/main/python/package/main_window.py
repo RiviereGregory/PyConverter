@@ -113,10 +113,17 @@ class MainWindow(QtWidgets.QWidget):
         self.worker.finished.connect(self.thread.quit)
         self.thread.start()
 
+        self.prg_dialog = QtWidgets.QProgressDialog("Coonversion des images",
+                                                    "Annuler...",
+                                                    1,
+                                                    len(images_a_convertir))
+        self.prg_dialog.show()
+
     def image_converted(self, lw_item, success):
         if success:
             lw_item.setIcon(self.ctx.img_checked)
             lw_item.processed = True
+            self.prg_dialog.setValue(self.prg_dialog.value() + 1)
 
     def delete_selected_items(self):
         for lw_item in self.lw_files.selectedItems():
